@@ -20,6 +20,7 @@ class RbAtom:
                                     for mS, mI in self.basis] for mS_, mI_ in self.basis])
         H = HB + Hhf
         E_levels = np.linalg.eigvals(H)
+        E_levels.sort()
         return E_levels
 
     def _HB_coeff(self, mS, mS_, mI, mI_):

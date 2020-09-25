@@ -3,7 +3,7 @@ import serial  # for serial port
 import numpy as np  # for arrays, numerical processing
 from time import sleep, time
 import gtk  # the gui# toolkit we'll use:
-# graph plotting library:
+# plot plotting library:
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
 

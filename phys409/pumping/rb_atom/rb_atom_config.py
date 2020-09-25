@@ -1,8 +1,8 @@
 from scipy import constants
 
-M = 1E6
-G = 1E9
-T2G = 1E4
+M = 1E6  # Mega
+G = 1E9  # Giga
+Gauss = 1E-4  # Gauss B field units in Tesla
 
 S = 1 / 2
 muB = constants.value('Bohr magneton')
