@@ -5,66 +5,52 @@ from plot_config import *
 
 
 class Plot:
-    def __init__(self, xs, ys):
-        self.ys = self._sanitize_ys(ys)
-        self.n_series, self.n_points = self.ys.shape
-        self.xs = self._sanitize_xs(xs)
+    def __init__(self):
+        self.n_series = 0
 
-    def line_overlay(self, options=None, legends=None, xlabel=None, ylabel=None, title=None, grid=False):
-        options = self._sanitize_options(options)
-        legends = self._sanitize_legends(legends)
+    def line(self, x, y, format_=None):
+        x, y = self._sanitize_xy(x, y)
+        if format_ is None:
+            plt.plot(x, y, linewidth=LINEWIDTH, markersize=MARKERSIZE)
+        else:
+            plt.plot(x, y, format_, linewidth=LINEWIDTH, markersize=MARKERSIZE)
+        self.n_series += 1
 
-        for x, y, option in zip(self.xs, self.ys, options):
-            if option is None:
-                plt.plot(x, y, linewidth=LINEWIDTH)
-            else:
-                plt.plot(x, y, option, linewidth=LINEWIDTH)
+    def points(self, x, y, format_=None):
+        format_ = '.' if format_ is None else format_
+        self.line(x, y, format_=format_)
 
-        if legends is not None:
-            plt.legend(legends)
+    def show(self, legend=None, xlabel=None, ylabel=None, title=None, grid=DEFAULT_GRID):
+        legend = self._sanitize_legend(legend)
+        if legend is not None:
+            plt.legend(legend)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.title(title)
         plt.gcf().canvas.set_window_title(_window_title())
         plt.grid(grid)
         plt.margins(*MARGINS)
+        plt.tight_layout()
         plt.show()
 
-    def _sanitize_ys(self, ys):
-        ys = np.array(ys)
-        if ys.ndim == 1:
-            ys = np.array([ys])
-        elif ys.ndim > 2:
-            raise RuntimeError(BAD_YS_DIMS_ERROR.format(ys.ndim))
-        return ys
+    def _sanitize_xy(self, x, y):
+        x, y = np.array(x), np.array(y)
+        if y.ndim > 1:
+            raise RuntimeError(BAD_Y_DIMS_ERROR.format(y.ndim))
+        if x.ndim > 1:
+            raise RuntimeError(BAD_X_DIMS_ERROR.format(x.ndim))
+        if x.shape != y.shape:
+            raise RuntimeError(XY_DIMS_DONT_MATCH_ERROR.format(x.shape, y.shape))
+        return x, y
 
-    def _sanitize_xs(self, xs):
-        xs = np.array(xs)
-        if xs.ndim == 1:
-            xs = np.array([xs] * self.n_series)
-        elif xs.ndim > 2:
-            raise RuntimeError(BAD_XS_DIMS_ERROR.format(xs.ndim))
-        if xs.shape != self.ys.shape:
-            raise RuntimeError(XY_DIMS_DONT_MATCH_ERROR.format(xs.shape, self.ys.shape))
-        return xs
-
-    def _sanitize_options(self, options):
-        if options is None:
-            return [None] * self.n_series
-        if type(options) is str:
-            options = [options] * self.n_series
-        elif len(options) != self.n_series:
-            raise RuntimeError(BAD_OPTIONS_DIM_ERROR.format(self.n_series, len(options)))
-        return options
-
-    def _sanitize_legends(self, legends):
-        if legends is None:
+    def _sanitize_legend(self, legend):
+        if legend is None:
             return None
-        if type(legends) is str:
-            raise RuntimeError(BAD_LEGENDS_TYPE_ERROR.format(self.n_series))
-        if len(legends) != self.n_series:
-            raise RuntimeError(BAD_LEGENDS_DIM_ERROR.format(self.n_series, len(legends)))
-        return legends
+        if type(legend) is str:
+            legend = np.array(legend)
+        if len(legend) != self.n_series:
+            raise RuntimeError(BAD_LEGEND_DIM_ERROR.format(self.n_series, len(legend)))
+        return legend
 
 
 def _window_title():

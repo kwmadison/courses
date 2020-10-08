@@ -14,9 +14,9 @@ class RbAtom:
         mI_vals = np.arange(-self.I, self.I + 1)
         self.basis = [(mS, mI) for mS in mS_vals for mI in mI_vals]
 
-    def E_levels(self, B0):
+    def energy_levels(self, B0):
         HB = muB * B0 * np.array([[self._HB_coeff(mS, mS_, mI, mI_)
-                                     for mS, mI in self.basis] for mS_, mI_ in self.basis])
+                                   for mS, mI in self.basis] for mS_, mI_ in self.basis])
         Hhf = self.Ahf * np.array([[self._Hhf_coeff(mS, mS_, mI, mI_)
                                     for mS, mI in self.basis] for mS_, mI_ in self.basis])
         H = HB + Hhf
@@ -24,8 +24,8 @@ class RbAtom:
         E_levels.sort()
         return E_levels
 
-    def RF_frequencies(self, B0):
-        Es = self.E_levels(B0)
+    def rf_frequencies(self, B0):
+        Es = self.energy_levels(B0)
         fs = []
         for i in range(0, self.hf_count[0] - 1):
             fs.append((Es[i + 1] - Es[i]) / h)
