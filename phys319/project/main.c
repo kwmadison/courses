@@ -1,56 +1,43 @@
 #include "msp430.h"
+#include "display.h"
+#include "motors.h"
+#include "accel.h"
+#include "uart.h"
 #include "consts.h"
 
-volatile unsigned int signal = 11;
+float accel_hist[A_COUNT];
+unsigned int accel_index = 0;
+float accel_avg;
+float accel_new;
+float accel_sum;
+float speed;
 
 int main(void) {
-    /* PIN CONFIGURATIONS */
-    P1DIR = P_CAN | P_LEDR | P_LEDG | P_PWM;  // set leds and pwm pin as output
-    P1OUT = 0;
-//    P1SEL |= P_PWM;  // set pwm pin special function to TA0.1
+   // configure all systems: motors, display, accelerometer, and uart
+   motors_config();
+   display_config();
+   accel_config();
+   uart_config();
 
-    /* CLOCK CONFIGURATIONS */
-    WDTCTL = WDTPW + WDTHOLD;  // Disable watchdog timer
-    BCSCTL1 = CALBC1_16MHZ;  // Configure clock for 16MHz frequency
-    DCOCTL = CALDCO_16MHZ;
-    BCSCTL2 = 0;  // Select SMCLK source as DCO with divider 1
+   // initialize accel value rolling history
+   accel_sum = 0;
+   for (unsigned int i = 0; i < A_COUNT; i++) {
+       accel_hist[i] = accel_read();
+       accel_sum += accel_hist[i];
+   }
+   accel_avg = accel_sum / A_COUNT;
 
-    /* TIMER CONFIGURATIONS */
-    TACTL = TASSEL_2 | MC_1;  // Source Timer A from SMCLK in up mode
-    TACCTL1 = CCIE | OUTMOD_7;  // reset/set mode
-    TACCR0 = 32;  // set pwm period on CCR1
-    TACCR1 = 16;  // set pwm duty cycle on CCR1
-    TACCR2 =
-//
-//    TBCTL = TBSSEL_1 | MC_1;  // Source Timer B from ACLK in up mode
-//    TBCCTL1 = CCIE + OUTMOD_3;  // TACCTL1 Capture Compare
-//    TBCCR0 = F_TBCLK / 8 - 1;  // period
-//    TBCCR1 = 0
+   while (1) {
+       accel_new = accel_read();  // take new reading of accel value
+       accel_sum += accel_new - accel_hist[accel_index];  // update the sum of recent accel values
+       accel_hist[accel_index] = accel_new;  // update the expired accel value with the new one
+       accel_index = (accel_index + 1) % A_COUNT;  // update the expired accel value index
+       accel_avg = accel_sum / A_COUNT;  // calculate averaged accel value from the sum
 
-
-//    _BIS_SR(LPM0_bits);  // enter low-power mode
-
-//    __enable_interrupt();
-
-//    __bis_SR_register(LPM3_bits + GIE);   // LPM3 with interrupts enabled
-
-    return 0;
-}
-
-
-#if defined(__TI_COMPILER_VERSION__)
-#pragma vector=TIMER0_A1_VECTOR
-__interrupt void ta1_isr (void)
-#else
-void __attribute__ ((interrupt(TIMER0_A1_VECTOR))) ta1_isr(void)
-#endif
-{
-    if (signal % 2) {
-        P1OUT |= P_CAN;
-    }
-    else {
-
-    }
-    signal >>= 1;
-
+       speed = sign(accel_avg) *
+               linear_map(abs(accel_avg), M_CTRL_C1, M_CTRL_C2, 0, 1);  // calculate speed from accel value
+       uart_send(speed);  // send speed value through UART
+       motors_set(speed);  // set motors speed
+       display_digit(linear_map(accel_avg, -1, 1, 0, 10));  // show mapped accel value on display
+   }
 }
