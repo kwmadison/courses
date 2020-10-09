@@ -65,8 +65,9 @@ if __name__ == '__main__':
     # Bs = np.linspace(0, 0.4, 40)
     # plot_energies(Bs, Rb85)
     # plot_rf_freqs(Bs, Rb87)
-    for number in Data.linear.sets:
-        process_linear(number)
-    # process_trans_rf(1)
+    # for number in Data.linear.sets:
+        # process_linear(number)
+    for number in Data.trans_rf.sets:
+        process_trans_rf(number)
     # process_quadratic(Data.quadratic.sets[52], denoise_factor=0.1, distance=30, prominence=0.04)
     pass
