@@ -8,7 +8,6 @@ class RbAtom:
         self.I = I_VALS[Rbx]
         self.gI = gI_VALS[Rbx]
         self.Ahf = Ahf_VALS[Rbx]
-        self.N = int(np.round((2 * S + 1) * (2 * self.I + 1)))
 
         mS_vals = np.arange(-S, S + 1)
         mI_vals = np.arange(-self.I, self.I + 1)
@@ -28,9 +27,9 @@ class RbAtom:
         Es = self.energy_levels(B0)
         fs = []
         for i in range(0, self.hf_count[0] - 1):
-            fs.append((Es[i + 1] - Es[i]) / h)
+            fs.append((Es[i + 1] - Es[i]) / C.h)
         for i in range(self.hf_count[0], self.hf_count[0] + self.hf_count[1] - 1):
-            fs.append((Es[i + 1] - Es[i]) / h)
+            fs.append((Es[i + 1] - Es[i]) / C.h)
         fs.sort()
         return fs
 

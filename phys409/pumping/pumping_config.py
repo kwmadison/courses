@@ -1,16 +1,21 @@
-import os
-from pathlib import Path
 from scipy import constants
+import numpy as np
 
-DIR = Path(os.path.dirname(os.path.abspath(__file__)))
-NAME = os.path.basename(DIR)
-ASSETS_DIR = DIR / f'{NAME}_assets'
-
-MEGA = 1E6
-GIGA = 1E9
 GAUSS = 1E-4  # Gauss B field units in Tesla
-h = constants.value('Planck constant')
-
-Rb85, Rb87 = 0, 1
 RB_NAMES = ('Rb85', 'Rb87')
 
+
+class C:
+    MEGA = 1E6
+    GIGA = 1E9
+    TERA = 1E12
+    MICRO = 1E-6
+    NANO = 1E-9
+
+    PI = np.pi
+    c = constants.c
+    h = constants.h
+    hbar = constants.hbar
+    epsilon0 = constants.epsilon_0
+
+    Rb85, Rb87 = 0, 1

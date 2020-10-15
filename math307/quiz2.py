@@ -6,16 +6,25 @@ from scipy.interpolate import lagrange, CubicSpline
 
 
 def vector_matrix_values():
-    x = [1, 3, 2, -5]
+    # x = [1, 3, 2, -5]
     # print(npla.norm(x, 3))
 
+    x = 2.1
+    # print(np.cos(x))
+    # print(np.tan(x))
     M = [
-        [0, 3, -2, 1],
-        [4, 7, -2, 3],
-        [0, 6, -1, 2],
-        [0, -3, -1, 3]
+        [np.cos(x), np.sin(x)],
+        [-np.sin(x), np.cos(x)]
     ]
-    # print(npla.cond(M, np.inf))
+    # print(npla.norm(M, 2))
+    # print(npla.norm(npla.inv(M), 2))
+    # print(npla.cond(M, 2))
+    # print(np.diag(M))
+    # eigs = la.eig(M)
+    # eigs_sorted = sorted(zip(*eigs), key=lambda e: e[0])
+    # eigvals = [e[0] for e in eigs_sorted]
+    # eigvecs = [e[1] for e in eigs_sorted]
+    # print(eigvals, '\n', eigvecs)
 
 
 def vandermonde_interpolation(points):
@@ -61,6 +70,7 @@ def cubic_interpolation(points):
     spline = CubicSpline(x, y, bc_type='natural')
     xlin = np.linspace(min(x) - 0.5, max(x) + 0.5, 101)
     ylin = spline(xlin)
+    print(spline.c)
     plt.plot(xlin, ylin, x, y, '.r')
     plt.show()
 
@@ -69,16 +79,16 @@ def cubic_interpolation(points):
 
 if __name__ == '__main__':
     pts = np.array([  # increasing
-        [1.3, 0],
-        [1.5, 4],
-        [2, -1],
-        [2.5, 3],
-        [2.8, 5],
-        [3, -5]
+        [0, 0],
+        [1, -1],
+        [2, 1],
+        [3, 0],
+        [4, 2],
+        [5, -1]
     ])
-    # vector_matrix_values()
+    vector_matrix_values()
     # vandermonde_interpolation(pts)
-    lagrange_interpolation(pts)
+    # lagrange_interpolation(pts)
     cubic_interpolation(pts)
 
 

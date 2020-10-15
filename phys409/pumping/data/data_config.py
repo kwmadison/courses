@@ -1,11 +1,11 @@
 import os
 from pathlib import Path
+from pumping_config import C
 
 DIR = Path(os.path.dirname(os.path.abspath(__file__)))
 NAME = os.path.basename(DIR)
 ASSETS_DIR = DIR / f'{NAME}_assets'
 
-Rb85, Rb87 = 0, 1
 SET_NAME = 'ALL00{number:02d}'
 CSV_NAME = 'F00{number:02d}CH{channel}.CSV'
 TIME_COLUMN, VOLTAGE_COLUMN, N_COLUMNS = 3, 4, 6
@@ -71,7 +71,7 @@ class TRANS_LIGHT:
     rf_amplitude = 5
     modulation_frequency = 5
     modulation_amplitude = 5
-    tuning = Rb85
+    tuning = C.Rb85
     settings = {0: 90, 1: 70, 2: 45, 3: 35, 4: 25, 5: 80, 6: 75, 7: 65, 8: 60, 9: 55, 10: 50}  # Polarizer angle
 
 
@@ -85,24 +85,24 @@ class TRANS_RF:
     modulation_frequency = 5
     modulation_amplitude = 1
     settings = {  # Tuning, RF amplitude
-        0: (Rb87, 2),
-        1: (Rb87, 2.5),
-        2: (Rb87, 3),
-        3: (Rb87, 3.5),
-        4: (Rb87, 4),
-        5: (Rb87, 4.5),
-        6: (Rb87, 5),
-        33: (Rb85, 5),
-        34: (Rb85, 4.5),
-        35: (Rb85, 4),
-        36: (Rb85, 3.5),
-        37: (Rb85, 3),
-        38: (Rb85, 2.5),
-        39: (Rb85, 2),
-        40: (Rb85, 1.5),
-        41: (Rb85, 1),
-        42: (Rb87, 1),
-        43: (Rb87, 1.5)
+        0: (C.Rb87, 2),
+        1: (C.Rb87, 2.5),
+        2: (C.Rb87, 3),
+        3: (C.Rb87, 3.5),
+        4: (C.Rb87, 4),
+        5: (C.Rb87, 4.5),
+        6: (C.Rb87, 5),
+        33: (C.Rb85, 5),
+        34: (C.Rb85, 4.5),
+        35: (C.Rb85, 4),
+        36: (C.Rb85, 3.5),
+        37: (C.Rb85, 3),
+        38: (C.Rb85, 2.5),
+        39: (C.Rb85, 2),
+        40: (C.Rb85, 1.5),
+        41: (C.Rb85, 1),
+        42: (C.Rb87, 1),
+        43: (C.Rb87, 1.5)
     }
 
 
