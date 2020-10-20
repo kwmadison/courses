@@ -7,8 +7,8 @@
 %-----------------------------------------------------------
 % Parameters defining discrete set of times.
 %-----------------------------------------------------------
-tmax = 3;
-deltat = 0.01;   
+tmax = 2.5;
+deltat = 0;   
 
 %-----------------------------------------------------------
 % Coefficient of restitution. Reflected velocity component 

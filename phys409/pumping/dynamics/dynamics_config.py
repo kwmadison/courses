@@ -1,10 +1,10 @@
 import numpy as np
 from pumping_config import C
 
-N = 2
+N = 1000
 T = 2E-5
 
-fik = 1 / 12 * np.array([
+FIK = 1 / 12 * np.array([
     [1, 1, 0, 6, 3, 1, 0, 0],
     [1, 0, 1, 0, 3, 4, 3, 0],
     [0, 1, 1, 0, 0, 1, 3, 6],
@@ -15,7 +15,7 @@ fik = 1 / 12 * np.array([
     [0, 0, 6, 0, 0, 0, 2, 4]
 ])
 
-Cik = np.array([
+CIK = np.array([
     [0, 1, 0, 0, 0, 1, 0, 0],
     [0, 0, 1, 0, 0, 0, 1, 0],
     [0, 0, 0, 0, 0, 0, 0, 1],
@@ -26,8 +26,13 @@ Cik = np.array([
     [0, 0, 0, 0, 0, 0, 0, 0]
 ])
 
-tau = 27.68 * C.NANO
-omega0 = 2 * C.PI * 377.10746338 * C.TERA
-Pik_over_I = 6 * C.PI * C.c ** 2 / (C.hbar * omega0 ** 3) * fik @ Cik
-Gik = fik / tau
-n_levels = 8
+TAU = 27.68 * C.NANO
+OMEGA0 = 2 * C.PI * 377.10746338 * C.TERA
+PIK_OVER_I = 6 * C.PI * C.c ** 2 / (C.hbar * OMEGA0 ** 3) * FIK @ CIK
+GIK = FIK / TAU
+K_LEVELS = 8
+I_LEVELS = 8
+
+print(6 * C.PI * C.c ** 2 / (C.hbar * OMEGA0 ** 3) * 1E4)
+print(1/TAU)
+quit()
