@@ -1,12 +1,12 @@
-import numpy as np
+import extract
 from data_config import *
 
 
 class DataSet:
     def __init__(self, config, number):
-        directory = ASSETS_DIR / config.folder / SET_NAME.format(number=number)
-        self._ch1_filepath = directory / CSV_NAME.format(number=number, channel=1)
-        self._ch2_filepath = directory / CSV_NAME.format(number=number, channel=2)
+        dir_set = ASSETS_DIR / config.folder / SET_NAME.format(number=number)
+        self._ch1_filepath = str(dir_set / CSV_NAME.format(number=number, channel=1))
+        self._ch2_filepath = str(dir_set / CSV_NAME.format(number=number, channel=2))
         self._time = self._ch1 = self._ch2 = None
 
     def time(self):
@@ -25,22 +25,8 @@ class DataSet:
         return self._ch2
 
     def _extract(self):
-        self._time, self._ch1 = DataSet._extract_csv(self._ch1_filepath)
-        _, self._ch2 = DataSet._extract_csv(self._ch2_filepath)
-
-    @staticmethod
-    def _extract_csv(filepath):
-        data = [[], []]
-        with open(filepath) as file:
-            raw_data = file.read()
-
-        for row in raw_data.split('\n'):
-            values = row.split(',')
-            if len(values) < N_COLUMNS:
-                break
-            data[0].append(float(values[TIME_COLUMN]))
-            data[1].append(float(values[VOLTAGE_COLUMN]))
-        return np.array(data)
+        self._time, self._ch1 = extract.extract(self._ch1_filepath, xcol=TIME_COLUMN, ycol=VOLTAGE_COLUMN)
+        _, self._ch2 = extract.extract(self._ch2_filepath, xcol=TIME_COLUMN, ycol=VOLTAGE_COLUMN)
 
 
 class LinearSet(DataSet):
