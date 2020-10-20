@@ -54,7 +54,7 @@ def process_linear(number):
     plot.show(xlabel='Time (s)', ylabel=Data.linear.ch1_label, legend=['Data Points', 'Linear Fit'])
 
     ch2 = denoise(ch2, 0.1)
-    peak_indices = index_valleys(ch2, distance=10, prominence=0.1)
+    peak_indices = index_peaks(-ch2, distance=10, prominence=0.1)
     print(f'Peak Currents (A): {Function.line(time[peak_indices], *params)}')
     plot.line(Function.line(time, *params), ch2)
     plot.points(Function.line(time[peak_indices], *params), ch2[peak_indices])
@@ -70,10 +70,10 @@ def process_trans_rf(number):
     time, ch1, ch2 = time[edge:], ch1[edge:], ch2[edge:]
 
     # Show decaying sinusoidal fit to detector signal
-    params, errors = fit(Function.rabi_oscillation, time, ch2, [Data.trans_rf.ch2_bin / 2] * len(time))
+    params, errors = fit(Function.rabi, time, ch2, [Data.trans_rf.ch2_bin / 2] * len(time))
     print(f'Decay Constant (1/s), Angular Frequency (1/s): {params[1]:.0f}, {np.abs(params[2]):.0f}')
     plot.points(time, ch2)
-    plot.line(time, Function.rabi_oscillation(time, *params))
+    plot.line(time, Function.rabi(time, *params))
     # plot.show(xlabel='Time (s)', ylabel=Data.linear.ch2_label, legend=['Data Points', 'Decaying Sin Fit'],
     #           title=f'{RB_NAMES[set_.tuning]} Rabi Oscillations - RF Amplitude = {set_.rf_amplitude} V')
     return np.abs(params[5]), set_.rf_amplitude, set_.tuning
@@ -83,8 +83,8 @@ if __name__ == '__main__':
     # Bs = np.linspace(0, 0.4, 40)
     # plot_energies(Bs, C.Rb85)
     # plot_rf_freqs(Bs, C.Rb87)
-    for number in Data.linear.sets:
-        process_linear(number)
+    # for number in Data.linear.sets:
+    #     process_linear(number)
     # freqs, amplitudes = [], []
     # for number in Data.trans_rf.sets:
     #     f, a, rbx = process_trans_rf(number)
@@ -95,4 +95,19 @@ if __name__ == '__main__':
     # plot.line(amplitudes, freqs)
     # plot.show()
     # process_quadratic(Data.quadratic.sets[52], denoise_factor=0.1, distance=30, prominence=0.04)
-    # plot_dynamics_Rb87(1E-5)
+    plot_dynamics_Rb87(1E3)
+
+
+''' More precise valley finding
+def fit_valley():
+    widths = signal.peak_widths(-ydata, indices)[0]
+    valleys = []
+    for index, width in zip(indices, widths):
+        half_range = round(width * WIDTH_TO_RANGE / 2)
+        xvals = xdata[index - half_range: index + 1 + half_range]
+        yvals = ydata[index - half_range: index + 1 + half_range]
+
+        fits, cov = optimize.curve_fit(lorentzian, xvals, yvals)
+        errors = np.diag(cov)
+        valleys.append([fits, errors])
+'''
