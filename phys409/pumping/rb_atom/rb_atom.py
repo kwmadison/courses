@@ -14,7 +14,7 @@ class RbAtom:
         self.basis = [(mS, mI) for mS in mS_vals for mI in mI_vals]
 
     def energy_levels(self, B0):
-        HB = muB * B0 * np.array([[self._HB_coeff(mS, mS_, mI, mI_)
+        HB = C.muB * B0 * np.array([[self._HB_coeff(mS, mS_, mI, mI_)
                                    for mS, mI in self.basis] for mS_, mI_ in self.basis])
         Hhf = self.Ahf * np.array([[self._Hhf_coeff(mS, mS_, mI, mI_)
                                     for mS, mI in self.basis] for mS_, mI_ in self.basis])
@@ -23,18 +23,19 @@ class RbAtom:
         E_levels.sort()
         return E_levels
 
-    def rf_frequencies(self, B0):
+    def rf_frequencies(self, B0, both_levels=False):
         Es = self.energy_levels(B0)
         fs = []
-        for i in range(0, self.hf_count[0] - 1):
-            fs.append((Es[i + 1] - Es[i]) / C.h)
         for i in range(self.hf_count[0], self.hf_count[0] + self.hf_count[1] - 1):
             fs.append((Es[i + 1] - Es[i]) / C.h)
+        if both_levels:
+            for i in range(0, self.hf_count[0] - 1):
+                fs.append((Es[i + 1] - Es[i]) / C.h)
         fs.sort()
-        return fs
+        return np.array(fs)
 
     def _HB_coeff(self, mS, mS_, mI, mI_):
-        return (gS * mS + self.gI * mI) * kdelta(mS, mS_) * kdelta(mI, mI_)
+        return (C.gS * mS + self.gI * mI) * kdelta(mS, mS_) * kdelta(mI, mI_)
 
     def _Hhf_coeff(self, mS, mS_, mI, mI_):
         SpIm = np.sqrt((S - mS) * (S + mS + 1) * (self.I + mI) * (self.I - mI + 1)) \

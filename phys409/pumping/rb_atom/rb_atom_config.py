@@ -1,8 +1,4 @@
 from pumping_config import C
-from scipy import constants
-
-muB = constants.value('Bohr magneton')
-gS = constants.value('electron g factor')
 
 # (Rb85 value, Rb87 value)
 S = 1 / 2

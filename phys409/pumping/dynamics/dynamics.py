@@ -1,31 +1,24 @@
 from dynamics_config import *
-import pandas
 
 
 def dynamics(I):
-    Nk = np.full(K_LEVELS, 1 / K_LEVELS)
-    Ni = np.zeros(I_LEVELS)
-    dt = T / N
-    ts = np.linspace(0, T, N + 1)
+    Nk = np.zeros(shape=(N, K_LEVELS))
+    Ni = np.zeros(shape=(N, I_LEVELS))
+    Abs = np.zeros(shape=N)
 
-    Pik, Gik = PIK_OVER_I * I * dt, GIK * dt
+    Pik, Gik = PIK_OVER_I * I, GIK
     Gi = np.sum(Gik, axis=1)
     Pi = np.sum(Pik, axis=1)
     Pk = np.sum(Pik, axis=0)
-    Nks, Nis, absorptions = [], [], []
 
-    for _ in ts:
-        Nks.append(Nk)
-        Nis.append(Ni)
-        absorptions.append(np.dot(Pk, Nk) / dt)
+    Nk[0] = [1 / K_LEVELS] * K_LEVELS
+    Abs0 = np.dot(Pk, Nk[0])
+    Abs[0] = 1
 
-        # rk = Ni @ Pik - np.multiply(Pk, Nk) + Ni @ Gik
-        # ri = Nk @ Pik.T - np.multiply(Pi, Ni) - np.multiply(Gi, Ni)
-        # print(pandas.DataFrame(Ni @ Pik))
-        # print(pandas.DataFrame(np.multiply(Pk, Nk)))
-        # print(pandas.DataFrame(Ni @ Gik))
-        Nk += Ni @ Pik - np.multiply(Pk, Nk) + Ni @ Gik
-        Ni += Nk @ Pik.T - np.multiply(Pi, Ni) - np.multiply(Gi, Ni)
+    for n in range(N-1):
+        Nk[n + 1] = Nk[n] + (Ni[n] @ Pik - np.multiply(Pk, Nk[n]) + Ni[n] @ Gik) * DT
+        Ni[n + 1] = Ni[n] + (Nk[n] @ Pik.T - np.multiply(Pi, Ni[n]) - np.multiply(Gi, Ni[n])) * DT
+        Abs[n + 1] = np.dot(Pk, Nk[n + 1]) / Abs0
 
-    return ts, np.array(Nks).T, np.array(Nis).T, absorptions
+    return np.linspace(0, T, N), Nk.T, Ni.T, Abs
 
