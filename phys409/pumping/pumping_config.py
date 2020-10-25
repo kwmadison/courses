@@ -6,9 +6,11 @@ RB_NAMES = ('Rb85', 'Rb87')
 
 
 class C:
+    KILO = 1E3
     MEGA = 1E6
     GIGA = 1E9
     TERA = 1E12
+    MILLI = 1E-3
     MICRO = 1E-6
     NANO = 1E-9
 
@@ -17,5 +19,7 @@ class C:
     h = constants.h
     hbar = constants.hbar
     epsilon0 = constants.epsilon_0
+    muB = constants.value('Bohr magneton')
+    gS = constants.value('electron g factor')
 
     Rb85, Rb87 = 0, 1

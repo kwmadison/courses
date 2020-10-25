@@ -2,7 +2,8 @@ import numpy as np
 from pumping_config import C
 
 N = 1000
-T = 2E-5
+T = 2E-6
+DT = T / N
 
 FIK = 1 / 12 * np.array([
     [1, 1, 0, 6, 3, 1, 0, 0],
@@ -32,7 +33,3 @@ PIK_OVER_I = 6 * C.PI * C.c ** 2 / (C.hbar * OMEGA0 ** 3) * FIK @ CIK
 GIK = FIK / TAU
 K_LEVELS = 8
 I_LEVELS = 8
-
-print(6 * C.PI * C.c ** 2 / (C.hbar * OMEGA0 ** 3) * 1E4)
-print(1/TAU)
-quit()
