@@ -68,7 +68,7 @@ def process_linear(number, show=False):
         p = plot.Plot()
         p.line(time, ch1, format_='.r', markersize=1)
         p.line(time, current, format_='k')
-        p.show(xlabel='Time (s)', ylabel=Data.linear.ch1_label, legend=['Data Points', 'Linear Fit'])
+        p.show(xlabel='Time (s)', ylabel=Data.linear.ch1_label, legend=['data Points', 'Linear Fit'])
 
     ch2 = process.denoise(ch2, 0.1)
     peak_indices = process.index_peaks(-ch2, distance=10, prominence=0.1)
@@ -97,7 +97,7 @@ def process_quadratic(number, show=False):
         p = plot.Plot()
         p.line(time, ch1, format_='.r', markersize=1)
         p.line(time, current, format_='k')
-        p.show(xlabel='Time (s)', ylabel=Data.quadratic.ch1_label, legend=['Data Points', 'Linear Fit'])
+        p.show(xlabel='Time (s)', ylabel=Data.quadratic.ch1_label, legend=['data Points', 'Linear Fit'])
 
     offset, padding = 0.2, 0.05
     ch2 = process.denoise(ch2, 0.1) + offset
@@ -130,7 +130,7 @@ def process_trans_rf(number, show=False):
     if show:
         p.line(time / C.MILLI, ch2, format_='.r', markersize=2)
         p.line(time / C.MILLI, process.Function.rabi(time, *params), format_='k')
-        p.show(xlabel='Time (ms)', ylabel=Data.linear.ch2_label, legend=['Data Points', 'Fit'])
+        p.show(xlabel='Time (ms)', ylabel=Data.linear.ch2_label, legend=['data Points', 'Fit'])
 
 
 def process_trans_light(number, show=False):
@@ -149,7 +149,7 @@ def process_trans_light(number, show=False):
         p = plot.Plot()
         p.line(time, ch2, format_='.r', markersize=1)
         p.line(time, process.Function.decay(time, *params))
-        p.show(xlabel='Time (s)', ylabel=Data.linear.ch2_label, legend=['Data Points', 'Decay Fit'])
+        p.show(xlabel='Time (s)', ylabel=Data.linear.ch2_label, legend=['data Points', 'Decay Fit'])
 
 
 class ProcessedData:
@@ -201,7 +201,7 @@ def fit_BvsI(show=False):
         p = plot.Plot()
         p.line(Isweep, Bsweep(Isweep, sigma=L.sigma_Isweep)[0] / C.MICRO, format_='k')
         p.line(Isweep, Bfield / C.MICRO, format_='.r')
-        p.show(xlabel='Sweep Current (a.u.)', ylabel='Sweep Magnetic Field ($\mu$T)', legend=['Data Points', 'Linear Fit'])
+        p.show(xlabel='Sweep Current (a.u.)', ylabel='Sweep Magnetic Field ($\mu$T)', legend=['data Points', 'Linear Fit'])
 
     Imain = [52E-3, 105E-3, 200E-3, 52E-3, 105E-3, 200E-3]
     Bfield = np.subtract([rf_frequency_to_B(f, C.Rb87) for f in [300E3, 600E3, 1200E3]] +
@@ -212,7 +212,7 @@ def fit_BvsI(show=False):
         p = plot.Plot()
         p.line(Imain, Bmain(Imain)[0] / C.MICRO, format_='k')
         p.line(Imain, Bfield / C.MICRO, format_='.r')
-        p.show(xlabel='Main Current (a.u.)', ylabel='Main Magnetic Field ($\mu$T)', legend=['Data Points', 'Linear Fit'])
+        p.show(xlabel='Main Current (a.u.)', ylabel='Main Magnetic Field ($\mu$T)', legend=['data Points', 'Linear Fit'])
 
     def B(Is, Im, sigma_Is=None, sigma_Im=None):
         Bs = Bsweep(Is, sigma=sigma_Is)
@@ -242,7 +242,7 @@ def fit_fRFvsB(show=False):
         p.line(B85s / C.MICRO, f85s / C.MEGA, format_='*r', markersize=6)
         p.line(B85s / C.MICRO, process.Function.line(B85s, *params85) / C.MEGA, format_='r')
         p.show(xlabel='Magnetic Field Along Main Axis ($\mu$T)', ylabel='Resonant Radio Frequency (MHz)',
-               legend=['$^{87}$Rb Data Points', '$^{87}$Rb Linear Fit', '$^{85}$Rb Data Points', '$^{85}$Rb Linear Fit'],
+               legend=['$^{87}$Rb data Points', '$^{87}$Rb Linear Fit', '$^{85}$Rb data Points', '$^{85}$Rb Linear Fit'],
                xrange=[None, None])
 
 
@@ -262,7 +262,7 @@ def fit_fRabivsVRF(show=False):
         p.line(T.VRF85, np.array(T.omega85) / C.KILO, format_='*r', markersize=6)
         p.line(T.VRF85, process.Function.line(T.VRF85, *params85) / C.KILO, format_='r')
         p.show(xlabel='Radio Frequency Amplitude (V)', ylabel='Rabi Frequency (kHz)',
-               legend=['$^{87}$Rb Data Points', '$^{87}$Rb Linear Fit', '$^{85}$Rb Data Points', '$^{85}$Rb Linear Fit'],
+               legend=['$^{87}$Rb data Points', '$^{87}$Rb Linear Fit', '$^{85}$Rb data Points', '$^{85}$Rb Linear Fit'],
                xrange=[None, None])
 
 
